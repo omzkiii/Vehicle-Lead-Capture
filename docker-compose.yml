@@ -1,0 +1,79 @@
+services:
+
+  ### BACKEND SERVICES ####################################################
+  backend:
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql://geo:password123@postgres:5432/mydb
+      REDIS_URL: redis://valkey:6379
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/:/app
+      - /app/node_modules
+    networks:
+      - this-network
+    depends_on:
+      valkey:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  valkey:
+    image: valkey/valkey:latest
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "6379:6379"
+    networks:
+      - this-network
+
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    container_name: redisinsight
+    ports:
+      - "5540:5540"
+    depends_on:
+      - valkey
+    networks:
+      - this-network
+
+  postgres:
+    image: postgres:16
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: geo
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: mydb
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U geo -d mydb" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - this-network
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    networks:
+      - this-network
+
+networks:
+  this-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
