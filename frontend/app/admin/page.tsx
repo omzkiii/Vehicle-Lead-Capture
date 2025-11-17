@@ -7,6 +7,7 @@ import {
   SignalIcon,
   TruckIcon,
 } from "@heroicons/react/24/outline";
+import Users from "./_list/Users";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("Users");
@@ -52,33 +53,14 @@ export default function Dashboard() {
         </ul>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 p-6 overflow-y-auto">
-        <h1 className="text-3xl font-bold mb-6">{activeTab} Dashboard</h1>
-
-        {isLoading && <p className="text-gray-500">Loading {activeTab}...</p>}
-        {isError && (
-          <p className="text-red-500">Error fetching {activeTab} data.</p>
-        )}
-
-        {data && (
-          <ul className="space-y-4">
-            {data.map((item: any) => (
-              <li
-                key={item.id}
-                className="bg-white p-4 rounded shadow-sm hover:shadow-md transition"
-              >
-                <h2 className="text-lg font-medium">
-                  {item.firstName} {item.lastName}
-                </h2>
-                <p className="text-gray-700">{item.vehicleOfInterest}</p>
-                <span className="text-sm text-gray-500">
-                  Source: {item.source} - Status: {item.status}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
+        {activeTab === "Users" ? (
+          <Users />
+        ) : activeTab === "Source" ? (
+          <span>Source</span>
+        ) : activeTab === "Vehicle" ? (
+          <span>Vehicle</span>
+        ) : null}
       </main>
     </div>
   );
