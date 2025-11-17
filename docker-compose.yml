@@ -1,6 +1,18 @@
 services:
+  frontend:
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/:/app
+      - /app/node_modules
+    networks:
+      - this-network
+    depends_on:
+      - backend
 
-  ### BACKEND SERVICES ####################################################
   backend:
     build:
       context: ./backend/
@@ -21,6 +33,7 @@ services:
       postgres:
         condition: service_healthy
 
+  ### BACKEND SERVICES ####################################################
   valkey:
     image: valkey/valkey:latest
     healthcheck:
