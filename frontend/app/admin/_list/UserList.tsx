@@ -1,13 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
 import { formatDate, User } from "./utils";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
+import { Dispatch, SetStateAction } from "react";
+
+type UserProp = {
+  isModalOpen: string;
+  setIsModalOpen: Dispatch<SetStateAction<string>>;
+};
 
 type UserListProp = {
   tab: string;
   id: string | null;
-  close: () => void;
+  name: string;
 };
-
 export default function UserList(prop: UserListProp) {
   const { data, isLoading, isError } = useQuery({
     queryKey: [prop.tab, prop.id],
@@ -21,13 +26,6 @@ export default function UserList(prop: UserListProp) {
 
   return (
     <main>
-      <button
-        onClick={prop.close}
-        className="flex items-center gap-2 text-blue-500 hover:text-blue-700 mb-4"
-      >
-        <ArrowLeftIcon className="w-5 h-5" />
-        Back
-      </button>
       {isLoading && <p className="text-gray-500">Loading users...</p>}
       {isError && <p className="text-red-500">Error fetching users data.</p>}
       {data && (

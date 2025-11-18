@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import UserList from "./UserList";
 import type { Vehicle } from "./utils";
+import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 
 export default function Vehicle() {
   const { data, isLoading, isError } = useQuery({
@@ -42,7 +43,16 @@ export default function Vehicle() {
           </div>
         )
       ) : (
-        <UserList id={userListId} tab="vehicles" close={closeUserList} />
+        <div>
+          <button
+            onClick={closeUserList}
+            className="flex items-center gap-2 text-blue-500 hover:text-blue-700 mb-4"
+          >
+            <ArrowLeftIcon className="w-5 h-5" />
+            Back
+          </button>
+          <UserList id={userListId} tab="vehicles" name={data.name} />
+        </div>
       )}
     </main>
   );
