@@ -61,8 +61,13 @@ export default function LeadModal({
       return true;
     },
     onSuccess: () => {
+      console.log(initialData);
+      console.log(formData);
       const fields = [
         "users",
+        initialData?.status,
+        initialData?.source,
+        initialData?.vehicleOfInterest,
         formData.status,
         formData.source,
         formData.vehicleOfInterest,
@@ -71,7 +76,6 @@ export default function LeadModal({
         predicate: (query) =>
           query.queryKey.some((key) => fields.includes(String(key))),
       });
-      console.log(formData);
     },
   });
 

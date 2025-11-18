@@ -59,7 +59,6 @@ export default function Dashboard() {
       {/* Sidebar */}
       <aside className="w-64 bg-white shadow-md flex flex-col p-4">
         <h1 className="text-xl font-bold mb-6">Dashboard</h1>
-
         {/* Top navigation */}
         <ul className="space-y-2 flex-1">
           {navItems
@@ -77,7 +76,6 @@ export default function Dashboard() {
               </li>
             ))}
         </ul>
-
         {/* Bottom buttons */}
         <div className="flex flex-col space-y-2 pb-8 mt-auto">
           {buttonItems
