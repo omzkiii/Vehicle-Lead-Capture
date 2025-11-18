@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { fetchSources, fetchStatus, Source, User } from "../utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { queryClient } from "../../layout";
+import { queryClient } from "@/app/ReactQueryProvider";
 
 type ModalFormProps = {
   isOpen: boolean;
@@ -11,23 +11,32 @@ type ModalFormProps = {
   initialData?: User;
 };
 
+const blankForm = {
+  // id: initialData?.id ?? "",
+  // firstName: "geo",
+  // lastName: "san",
+  // email: "geo@san",
+  // phone: "123",
+  // vehicleOfInterest: "2025 Sniper 155",
+  // status: "Qualified",
+  // source: "SMS",
+  // dateReceived: "",
+  id: "",
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  vehicleOfInterest: "",
+  status: "",
+  source: "",
+  dateReceived: "",
+};
 export default function LeadModal({
   isOpen,
   onClose,
   initialData,
 }: ModalFormProps) {
-  const blankForm = {
-    id: "",
-    firstName: "geo",
-    lastName: "san",
-    email: "geo@san",
-    phone: "123",
-    vehicleOfInterest: "2025 Sniper 155",
-    status: "Qualified",
-    source: "SMS",
-    dateReceived: "",
-  };
-  const [formData, setFormData] = useState<User>(initialData || blankForm);
+  const [formData, setFormData] = useState<User>(initialData ?? blankForm);
 
   const sourcesQuery = useQuery<Source[]>({
     queryKey: ["sources"],
@@ -39,18 +48,17 @@ export default function LeadModal({
   });
 
   useEffect(() => {
-    if (initialData) {
-      setFormData(initialData);
-    }
+    setFormData(initialData ?? blankForm);
   }, [initialData]);
-  const mutation = useMutation({
+
+  const insertUser = useMutation({
     mutationFn: async (newUser: User) => {
-      const res = await fetch("/api/users", {
+      await fetch("/api/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newUser),
       });
-      return await res.json();
+      return true;
     },
     onSuccess: () => {
       const fields = [
@@ -64,7 +72,7 @@ export default function LeadModal({
           query.queryKey.some((key) => fields.includes(String(key))),
       });
       console.log(formData);
-      setFormData(blankForm);
+      // setFormData(blankForm);
     },
   });
 
@@ -76,7 +84,7 @@ export default function LeadModal({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    mutation.mutate(formData);
+    insertUser.mutate(formData);
     onClose();
   };
 
@@ -84,7 +92,7 @@ export default function LeadModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      {mutation.isPending ? (
+      {insertUser.isPending ? (
         "Saving Lead"
       ) : (
         <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
@@ -217,8 +225,8 @@ export default function LeadModal({
                 Save
               </button>
             </div>
-            {mutation.isError ? (
-              <div>An error occurred: {mutation.error.message}</div>
+            {insertUser.isError ? (
+              <div>An error occurred: {insertUser.error.message}</div>
             ) : null}
           </form>
         </div>

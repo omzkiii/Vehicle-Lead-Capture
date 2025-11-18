@@ -17,6 +17,11 @@ export type Source = {
   name: string;
 };
 
+export type Status = {
+  id: string | null;
+  name: string;
+};
+
 export type Vehicle = {
   id: string | null;
   name: string;

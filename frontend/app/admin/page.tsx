@@ -14,18 +14,19 @@ import SourceModal from "./_list/_modals/SourceModal";
 import VehicleModal from "./_list/_modals/VehicleModal";
 import { User } from "./_list/utils";
 
+const Status = dynamic(() => import("./_list/Status"));
 const Users = dynamic(() => import("./_list/Users"));
 const Sources = dynamic(() => import("./_list/Sources"));
 const Vehicles = dynamic(() => import("./_list/Vehicles"));
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState("Sources");
+  const [activeTab, setActiveTab] = useState("Status");
   const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
   const [isSourceModalOpen, setIsSourceModalOpen] = useState(false);
   const [isVehicleModalOpen, setIsVehicleModalOpen] = useState(false);
 
   const navItems = [
-    { name: "Users", icon: UserGroupIcon, tab: true },
+    { name: "Status", icon: UserGroupIcon, tab: true },
     { name: "Sources", icon: SignalIcon, tab: true },
     { name: "Vehicles", icon: TruckIcon, tab: true },
     {
@@ -93,8 +94,8 @@ export default function Dashboard() {
       </aside>
 
       <main className="flex-1 p-6 overflow-y-auto">
-        {activeTab === "Users" ? (
-          <Users />
+        {activeTab === "Status" ? (
+          <Status />
         ) : activeTab === "Sources" ? (
           <Sources />
         ) : activeTab === "Vehicles" ? (

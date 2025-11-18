@@ -22,7 +22,7 @@ export default function SourceList() {
       {selectedSource == null ? (
         data && (
           <div>
-            <h1 className="text-3xl font-bold mb-6">Sources Dashboard</h1>
+            <h1 className="text-3xl font-bold mb-6">Sources </h1>
             <ul className="space-y-4">
               {data.map((item: Source) => (
                 <li
