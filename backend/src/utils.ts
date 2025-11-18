@@ -1,3 +1,4 @@
+import { log } from "console";
 import type { User } from "./generated/prisma/client.js";
 import { prisma } from "./index.js";
 import { v4 as uuid } from "uuid";
@@ -29,7 +30,7 @@ function capitalizeWords(str: string) {
     .join(" ");
 }
 
-export async function insertUser(u: UserData) {
+export async function insertUser(u: UserData): Promise<User> {
   const [source, vehicleOfInterest, status] = await Promise.all([
     prisma.source.upsert({
       where: { name: capitalizeWords(u.source) },
@@ -60,9 +61,18 @@ export async function insertUser(u: UserData) {
     vehicleOfInterestId: vehicleOfInterest.id,
     statusId: status.id,
   };
-  await prisma.user.upsert({
+  return await prisma.user.upsert({
     where: { id: user.id },
     create: user,
-    update: {},
+    update: {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      phone: user.phone,
+      vehicleOfInterestId: user.vehicleOfInterestId,
+      statusId: user.statusId,
+      sourceId: user.sourceId,
+      dateReceived: user.dateReceived,
+    },
   });
 }

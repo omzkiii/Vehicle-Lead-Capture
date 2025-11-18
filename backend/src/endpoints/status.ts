@@ -1,6 +1,7 @@
 import { Router } from "express";
 import type { Request, Response } from "express";
 import { prisma, redis } from "../index.js";
+import { CACHE_TTL } from "./refreshCache.js";
 
 export const status = Router();
 
@@ -10,14 +11,14 @@ status.get("/status", async (req: Request, res: Response) => {
     res.send(JSON.parse(cached));
   } else {
     const status = await prisma.status.findMany();
-    await redis.set("status", JSON.stringify(status), { EX: 60 });
+    await redis.set("status", JSON.stringify(status), { EX: CACHE_TTL });
     res.send(status);
   }
 });
 
 status.get("/status/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
-  const cached = await redis.get(`status:${id}`);
+  const cached = await redis.get(`users:status:${id}`);
   if (cached) {
     res.send(JSON.parse(cached));
   } else {
@@ -51,8 +52,8 @@ status.get("/status/:id", async (req: Request, res: Response) => {
           })),
         }
       : null;
-    await redis.set(`status:${id}`, JSON.stringify(formattedStatus), {
-      EX: 60,
+    await redis.set(`users:status:${id}`, JSON.stringify(formattedStatus), {
+      EX: CACHE_TTL,
     });
     res.send(formattedStatus);
   }

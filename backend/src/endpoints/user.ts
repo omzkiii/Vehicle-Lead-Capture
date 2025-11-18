@@ -2,6 +2,7 @@ import { Router } from "express";
 import type { Request, Response } from "express";
 import { prisma, redis } from "../index.js";
 import { insertUser } from "../utils.js";
+import { invalidateCache, refreshUserCache } from "./refreshCache.js";
 
 export const user = Router();
 
@@ -10,31 +11,40 @@ user.get("/users", async (req: Request, res: Response) => {
   if (cached) {
     res.send(JSON.parse(cached));
   } else {
-    const data = await prisma.user.findMany({
-      omit: {
-        sourceId: true,
-        statusId: true,
-        vehicleOfInterestId: true,
-      },
-      include: {
-        source: { select: { name: true } },
-        status: { select: { name: true } },
-        vehicleOfInterest: { select: { name: true } },
-      },
-      orderBy: { dateReceived: "desc" },
-    });
-    const users = data.map((d) => ({
-      ...d,
-      source: d.source.name,
-      status: d.status.name,
-      vehicleOfInterest: d.vehicleOfInterest.name,
-    }));
-    await redis.set("users", JSON.stringify(users), { EX: 60 });
+    const users = await refreshUserCache();
     res.send(users);
   }
 });
 
 user.post("/users", async (req: Request, res: Response) => {
-  insertUser(req.body);
-  res.send(req.body);
+  try {
+    const createdUser = await insertUser(req.body);
+    invalidateCache(createdUser);
+    res.status(201).json(createdUser);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message || "Internal server error" });
+  }
+});
+
+user.delete("/users/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ error: "Missing user id" });
+  }
+
+  try {
+    const deletedUser = await prisma.user.delete({
+      where: { id },
+    });
+
+    invalidateCache(deletedUser);
+    res.status(200).json({ message: "User deleted", user: deletedUser });
+  } catch (err: any) {
+    if (err.code === "P2025") {
+      res.status(404).json({ error: "User not found" });
+    } else {
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
 });
