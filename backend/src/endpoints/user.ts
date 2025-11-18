@@ -1,6 +1,7 @@
 import { Router } from "express";
 import type { Request, Response } from "express";
 import { prisma, redis } from "../index.js";
+import { insertUser } from "../utils.js";
 
 export const user = Router();
 
@@ -34,6 +35,6 @@ user.get("/users", async (req: Request, res: Response) => {
 });
 
 user.post("/users", async (req: Request, res: Response) => {
-  console.log(req.body);
-  res.send("OK");
+  insertUser(req.body);
+  res.send(req.body);
 });

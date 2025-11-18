@@ -1,5 +1,6 @@
 import type { User } from "./generated/prisma/client.js";
 import { prisma } from "./index.js";
+import { v4 as uuid } from "uuid";
 
 export type UserData = {
   id: string;
@@ -48,12 +49,13 @@ export async function insertUser(u: UserData) {
   ]);
 
   const user: User = {
-    id: u.id,
+    id: u.id === "" ? uuid() : u.id,
     firstName: u.firstName,
     lastName: u.lastName,
     email: u.email,
     phone: u.phone,
-    dateReceived: new Date(u.dateReceived),
+    dateReceived:
+      u.dateReceived === "" ? new Date(Date.now()) : new Date(u.dateReceived),
     sourceId: source.id,
     vehicleOfInterestId: vehicleOfInterest.id,
     statusId: status.id,
