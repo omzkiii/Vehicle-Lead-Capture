@@ -18,8 +18,14 @@ user.get("/users", async (req: Request, res: Response) => {
 
 user.post("/users", async (req: Request, res: Response) => {
   try {
+    let old;
+    if (req.body.id !== "") {
+      old = await prisma.user.findUnique({
+        where: { id: req.body.id },
+      });
+    }
     const createdUser = await insertUser(req.body);
-    invalidateCache(createdUser);
+    invalidateCache(createdUser, old);
     res.status(201).json(createdUser);
   } catch (err: any) {
     res.status(500).json({ error: err.message || "Internal server error" });
