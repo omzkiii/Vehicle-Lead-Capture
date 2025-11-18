@@ -9,9 +9,7 @@ source.get("/sources", async (req: Request, res: Response) => {
   if (cached) {
     res.send(JSON.parse(cached));
   } else {
-    const sources = await prisma.source.findMany({
-      select: { name: true },
-    });
+    const sources = await prisma.source.findMany();
     await redis.set("sources", JSON.stringify(sources), { EX: 60 });
     res.send(sources);
   }

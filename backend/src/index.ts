@@ -26,7 +26,7 @@ redis.connect();
 
 async function main() {
   // Endpoints
-  app.get("/", async (req: Request, res: Response) => {
+  app.get("/seed", async (req: Request, res: Response) => {
     await seed();
     res.send("OK");
   });

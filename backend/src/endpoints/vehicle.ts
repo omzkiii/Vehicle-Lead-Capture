@@ -9,9 +9,7 @@ vehicle.get("/vehicles", async (req: Request, res: Response) => {
   if (cached) {
     res.send(JSON.parse(cached));
   } else {
-    const vehicles = await prisma.vehicleOfInterest.findMany({
-      select: { name: true },
-    });
+    const vehicles = await prisma.vehicleOfInterest.findMany();
     await redis.set("vehicles", JSON.stringify(vehicles), { EX: 60 });
     res.send(vehicles);
   }
