@@ -1,14 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
 
 export type User = {
-  id: string | null;
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
   vehicleOfInterest: string;
   status: string;
-  dateReceived: string | null;
+  dateReceived: string;
   source: string;
 };
 

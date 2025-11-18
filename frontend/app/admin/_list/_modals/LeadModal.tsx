@@ -17,7 +17,7 @@ export default function LeadModal({
   initialData,
 }: ModalFormProps) {
   const blankForm = {
-    id: null,
+    id: "",
     firstName: "geo",
     lastName: "san",
     email: "geo@san",
@@ -25,7 +25,7 @@ export default function LeadModal({
     vehicleOfInterest: "2025 Sniper 155",
     status: "Qualified",
     source: "SMS",
-    dateReceived: null,
+    dateReceived: "",
   };
   const [formData, setFormData] = useState<User>(initialData || blankForm);
 
