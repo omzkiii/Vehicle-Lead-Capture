@@ -7,6 +7,7 @@ import { user } from "./endpoints/user.js";
 import { seed } from "./seed.js";
 import { source } from "./endpoints/source.js";
 import { vehicle } from "./endpoints/vehicle.js";
+import { status } from "./endpoints/status.js";
 
 const PORT = 8000;
 const app = express();
@@ -34,6 +35,7 @@ async function main() {
   app.use(user);
   app.use(source);
   app.use(vehicle);
+  app.use(status);
 
   app.listen(PORT, () => {
     console.log(`Listening to ${PORT}...`);
