@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Source } from "../utils";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/app/ReactQueryProvider";
@@ -15,6 +15,10 @@ type ModalFormProps = {
   initialData?: Item;
   tab: string;
 };
+const blankForm = {
+  id: "",
+  name: "",
+};
 
 export default function Modal({
   isOpen,
@@ -22,12 +26,12 @@ export default function Modal({
   initialData,
   tab,
 }: ModalFormProps) {
-  const [formData, setFormData] = useState<Item>(
-    initialData || {
-      id: "",
-      name: "",
-    },
-  );
+  const [formData, setFormData] = useState<Item>(initialData || blankForm);
+
+  useEffect(() => {
+    setFormData(initialData ?? blankForm);
+  }, [initialData]);
+
   const insert = useMutation({
     mutationFn: async (newItem: Item) => {
       return await fetch(`/api/${tab}`, {
@@ -40,6 +44,7 @@ export default function Modal({
       queryClient.invalidateQueries({
         queryKey: [tab],
       });
+      setFormData(blankForm);
     },
   });
 

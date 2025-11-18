@@ -52,7 +52,9 @@ export default function Tab({ tab, fetchItem }: TabProp) {
       {selected == null ? (
         data && (
           <div>
-            <h1 className="text-3xl font-bold mb-6">Status</h1>
+            <h1 className="text-3xl font-bold mb-6">
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </h1>
             <ul className="space-y-4">
               {data.map((item: Item) => (
                 <div

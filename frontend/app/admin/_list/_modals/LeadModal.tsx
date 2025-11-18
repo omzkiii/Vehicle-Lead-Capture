@@ -72,7 +72,6 @@ export default function LeadModal({
           query.queryKey.some((key) => fields.includes(String(key))),
       });
       console.log(formData);
-      // setFormData(blankForm);
     },
   });
 

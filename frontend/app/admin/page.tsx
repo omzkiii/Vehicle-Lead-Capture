@@ -10,9 +10,8 @@ import {
 } from "@heroicons/react/24/outline";
 
 import LeadModal from "./_list/_modals/LeadModal";
-import SourceModal from "./_list/_modals/SourceModal";
-import VehicleModal from "./_list/_modals/VehicleModal";
 import { fetchSources, fetchStatus, fetchVehicles } from "./_list/utils";
+import Modal from "./_list/_modals/Modal";
 
 const Tab = dynamic(() => import("./_list/Tab"));
 
@@ -21,16 +20,25 @@ export default function Dashboard() {
   const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
   const [isSourceModalOpen, setIsSourceModalOpen] = useState(false);
   const [isVehicleModalOpen, setIsVehicleModalOpen] = useState(false);
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
 
   const navItems = [
-    { name: "Status", icon: UserGroupIcon, tab: true },
-    { name: "Sources", icon: SignalIcon, tab: true },
-    { name: "Vehicles", icon: TruckIcon, tab: true },
+    { name: "Status", icon: UserGroupIcon, tab: true, fetchItem: fetchStatus },
+    { name: "Sources", icon: SignalIcon, tab: true, fetchItem: fetchSources },
+    { name: "Vehicles", icon: TruckIcon, tab: true, fetchItem: fetchVehicles },
+  ];
+  const buttonItems = [
     {
       name: "Add Lead",
       icon: TruckIcon,
       tab: false,
       toggle: setIsLeadModalOpen,
+    },
+    {
+      name: "Add Status",
+      icon: TruckIcon,
+      tab: false,
+      toggle: setIsStatusModalOpen,
     },
     {
       name: "Add Source",
@@ -45,8 +53,6 @@ export default function Dashboard() {
       toggle: setIsVehicleModalOpen,
     },
   ];
-
-  const activeItem = navItems.find((item) => item.name === activeTab);
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -74,7 +80,7 @@ export default function Dashboard() {
 
         {/* Bottom buttons */}
         <div className="flex flex-col space-y-2 pb-8 mt-auto">
-          {navItems
+          {buttonItems
             .filter((item) => !item.tab)
             .map((item) => (
               <button
@@ -91,24 +97,34 @@ export default function Dashboard() {
       </aside>
 
       <main className="flex-1 p-6 overflow-y-auto">
-        {activeTab === "Status" ? (
-          <Tab tab="status" fetchItem={fetchStatus} />
-        ) : activeTab === "Sources" ? (
-          <Tab tab="sources" fetchItem={fetchSources} />
-        ) : activeTab === "Vehicles" ? (
-          <Tab tab="vehicles" fetchItem={fetchVehicles} />
-        ) : null}
+        {navItems
+          .filter((item) => item.tab)
+          .map((item) => (
+            <div
+              key={item.name}
+              className={activeTab === item.name ? "block" : "hidden"}
+            >
+              <Tab tab={item.name.toLowerCase()} fetchItem={item.fetchItem!} />
+            </div>
+          ))}
         <LeadModal
           isOpen={isLeadModalOpen}
           onClose={() => setIsLeadModalOpen(false)}
         />
-        <SourceModal
+        <Modal
+          isOpen={isStatusModalOpen}
+          onClose={() => setIsStatusModalOpen(false)}
+          tab={"status"}
+        />
+        <Modal
           isOpen={isSourceModalOpen}
           onClose={() => setIsSourceModalOpen(false)}
+          tab={"sources"}
         />
-        <VehicleModal
+        <Modal
           isOpen={isVehicleModalOpen}
           onClose={() => setIsVehicleModalOpen(false)}
+          tab={"vehicles"}
         />
       </main>
     </div>
