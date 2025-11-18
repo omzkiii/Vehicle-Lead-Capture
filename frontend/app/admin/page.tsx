@@ -8,8 +8,8 @@ import {
   TruckIcon,
 } from "@heroicons/react/24/outline";
 import Users from "./_list/Users";
-import Source from "./_list/Source";
-import Vehicle from "./_list/Vehicle";
+import Sources from "./_list/Sources";
+import Vehicles from "./_list/Vehicles";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("Users");
@@ -47,9 +47,9 @@ export default function Dashboard() {
         {activeTab === "Users" ? (
           <Users />
         ) : activeTab === "Source" ? (
-          <Source />
+          <Sources />
         ) : activeTab === "Vehicle" ? (
-          <Vehicle />
+          <Vehicles />
         ) : null}
       </main>
     </div>

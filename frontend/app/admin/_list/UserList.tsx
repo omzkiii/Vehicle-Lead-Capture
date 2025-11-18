@@ -1,23 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import { formatDate } from "./utils";
+import { formatDate, User } from "./utils";
 
-type User = {
+type UserListProp = {
+  tab: string;
   id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  vehicleOfInterest: string;
-  status: string;
-  dateReceived: string;
-  source: string;
 };
 
-export default function Users() {
+export default function UserList(prop: UserListProp) {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["users"],
+    queryKey: [prop.tab, prop.id],
     queryFn: async () => {
-      const res = await fetch("/api/users");
+      const res = await fetch(`/api/${prop.tab}/${prop.id}`);
       if (!res.ok) throw new Error("Failed to fetch data");
       console.log(res);
       return res.json();
