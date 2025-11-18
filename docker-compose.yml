@@ -75,14 +75,13 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - this-network
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - "8080:8080"
-    networks:
-      - this-network
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   ports:
+  #     - "8080:8080"
+  #   networks:
+  #     - this-network
 
 networks:
   this-network:

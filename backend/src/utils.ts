@@ -13,11 +13,26 @@ export type UserData = {
   source: string;
 };
 
+function toKebabCase(str: string) {
+  return str
+    .trim()
+    .split(/[\s-]+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join("-");
+}
+
+function capitalizeWords(str: string) {
+  return str
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
 export async function insertUser(u: UserData) {
   const [source, vehicleOfInterest, status] = await Promise.all([
     prisma.source.upsert({
-      where: { name: u.source },
-      create: { name: u.source },
+      where: { name: capitalizeWords(u.source) },
+      create: { name: capitalizeWords(u.source) },
       update: {},
     }),
     prisma.vehicleOfInterest.upsert({
@@ -26,8 +41,8 @@ export async function insertUser(u: UserData) {
       update: {},
     }),
     prisma.status.upsert({
-      where: { name: u.status },
-      create: { name: u.status },
+      where: { name: toKebabCase(u.status) },
+      create: { name: toKebabCase(u.status) },
       update: {},
     }),
   ]);
