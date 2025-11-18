@@ -8,29 +8,19 @@ import {
   TruckIcon,
 } from "@heroicons/react/24/outline";
 import Users from "./_list/Users";
+import Source from "./_list/Source";
+import Vehicle from "./_list/Vehicle";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("Users");
 
   const navItems = [
-    { name: "Users", icon: UserGroupIcon, api: "/api/users" },
-    { name: "Source", icon: SignalIcon, api: "/api/source" },
-    { name: "Vehicle", icon: TruckIcon, api: "/api/vehicle" },
+    { name: "Users", icon: UserGroupIcon },
+    { name: "Source", icon: SignalIcon },
+    { name: "Vehicle", icon: TruckIcon },
   ];
 
   const activeItem = navItems.find((item) => item.name === activeTab);
-
-  const { data, isLoading, isError } = useQuery({
-    queryKey: [activeTab],
-    queryFn: async () => {
-      if (!activeItem) return [];
-      const res = await fetch(activeItem.api);
-      if (!res.ok) throw new Error("Failed to fetch data");
-      console.log(res);
-
-      return res.json();
-    },
-  });
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -57,9 +47,9 @@ export default function Dashboard() {
         {activeTab === "Users" ? (
           <Users />
         ) : activeTab === "Source" ? (
-          <span>Source</span>
+          <Source />
         ) : activeTab === "Vehicle" ? (
-          <span>Vehicle</span>
+          <Vehicle />
         ) : null}
       </main>
     </div>

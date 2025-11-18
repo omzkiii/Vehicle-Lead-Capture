@@ -14,15 +14,15 @@ type User = {
 
 export default function Users() {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["Users"],
+    queryKey: ["users"],
     queryFn: async () => {
       const res = await fetch("/api/users");
       if (!res.ok) throw new Error("Failed to fetch data");
       console.log(res);
-
       return res.json();
     },
   });
+
   return (
     <main className="flex-1 p-6 overflow-y-auto">
       <h1 className="text-3xl font-bold mb-6">User Dashboard</h1>
