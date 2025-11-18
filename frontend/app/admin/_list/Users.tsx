@@ -1,17 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { formatDate } from "./utils";
-
-type User = {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  vehicleOfInterest: string;
-  status: string;
-  dateReceived: string;
-  source: string;
-};
+import { formatDate, User } from "./utils";
 
 export default function Users() {
   const { data, isLoading, isError } = useQuery({

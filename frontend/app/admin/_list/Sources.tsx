@@ -1,11 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import UserList from "./UserList";
-
-type Source = {
-  id: string;
-  name: string;
-};
+import type { Source } from "./utils";
 
 export default function Source() {
   const { data, isLoading, isError } = useQuery({

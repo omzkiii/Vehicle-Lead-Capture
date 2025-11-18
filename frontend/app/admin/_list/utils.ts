@@ -1,5 +1,5 @@
 export type User = {
-  id: string;
+  id: string | null;
   firstName: string;
   lastName: string;
   email: string;
@@ -8,6 +8,16 @@ export type User = {
   status: string;
   dateReceived: string;
   source: string;
+};
+
+export type Source = {
+  id: string | null;
+  name: string;
+};
+
+export type Vehicle = {
+  id: string | null;
+  name: string;
 };
 
 export function formatDate(date: string) {

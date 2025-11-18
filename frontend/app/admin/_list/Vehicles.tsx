@@ -1,11 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import UserList from "./UserList";
-
-type Vehicle = {
-  id: string;
-  name: string;
-};
+import type { Vehicle } from "./utils";
 
 export default function Vehicle() {
   const { data, isLoading, isError } = useQuery({
