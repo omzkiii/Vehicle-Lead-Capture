@@ -12,12 +12,12 @@ import Sources from "./_list/Sources";
 import Vehicles from "./_list/Vehicles";
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState("Users");
+  const [activeTab, setActiveTab] = useState("Sources");
 
   const navItems = [
     { name: "Users", icon: UserGroupIcon },
-    { name: "Source", icon: SignalIcon },
-    { name: "Vehicle", icon: TruckIcon },
+    { name: "Sources", icon: SignalIcon },
+    { name: "Vehicles", icon: TruckIcon },
   ];
 
   const activeItem = navItems.find((item) => item.name === activeTab);
@@ -46,9 +46,9 @@ export default function Dashboard() {
       <main className="flex-1 p-6 overflow-y-auto">
         {activeTab === "Users" ? (
           <Users />
-        ) : activeTab === "Source" ? (
+        ) : activeTab === "Sources" ? (
           <Sources />
-        ) : activeTab === "Vehicle" ? (
+        ) : activeTab === "Vehicles" ? (
           <Vehicles />
         ) : null}
       </main>
