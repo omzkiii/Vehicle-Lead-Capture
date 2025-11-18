@@ -1,23 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import UserList from "./UserList";
-import type { Vehicle } from "./utils";
+import { fetchVehicles, type Vehicle } from "./utils";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 
-export default function Vehicle() {
+export default function VehicleList() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["vehicles"],
-    queryFn: async () => {
-      const res = await fetch("/api/vehicles");
-      if (!res.ok) throw new Error("Failed to fetch data");
-      console.log(res);
-      return res.json();
-    },
+    queryFn: fetchVehicles,
   });
 
-  const [userListId, setUserListId] = useState<string | null>(null);
+  const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
   function closeUserList() {
-    setUserListId(null);
+    setSelectedVehicle(null);
   }
 
   return (
@@ -25,7 +20,7 @@ export default function Vehicle() {
       {isLoading && <p className="text-gray-500">Loading users...</p>}
       {isError && <p className="text-red-500">Error fetching users data.</p>}
 
-      {userListId == null ? (
+      {selectedVehicle == null ? (
         data && (
           <div>
             <h1 className="text-3xl font-bold mb-6">Sources Dashboard</h1>
@@ -34,7 +29,7 @@ export default function Vehicle() {
                 <li
                   key={item.id}
                   className="p-4 bg-white rounded shadow-sm"
-                  onClick={() => setUserListId(item.id)}
+                  onClick={() => setSelectedVehicle(item)}
                 >
                   <h2 className="font-bold">{item.name}</h2>
                 </li>
@@ -51,7 +46,7 @@ export default function Vehicle() {
             <ArrowLeftIcon className="w-5 h-5" />
             Back
           </button>
-          <UserList id={userListId} tab="vehicles" name={data.name} />
+          <UserList item={selectedVehicle} tab="vehicles" name={data.name} />
         </div>
       )}
     </main>

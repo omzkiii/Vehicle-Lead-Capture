@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { User } from "../utils";
-import { useMutation } from "@tanstack/react-query";
+import { fetchSources, fetchStatus, Source, User } from "../utils";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "../../layout";
 
 type ModalFormProps = {
@@ -16,19 +16,27 @@ export default function LeadModal({
   onClose,
   initialData,
 }: ModalFormProps) {
-  const [formData, setFormData] = useState<User>(
-    initialData || {
-      id: null,
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      vehicleOfInterest: "",
-      status: "",
-      source: "",
-      dateReceived: "",
-    },
-  );
+  const blankForm = {
+    id: null,
+    firstName: "geo",
+    lastName: "san",
+    email: "geo@san",
+    phone: "123",
+    vehicleOfInterest: "2025 Sniper 155",
+    status: "Qualified",
+    source: "SMS",
+    dateReceived: null,
+  };
+  const [formData, setFormData] = useState<User>(initialData || blankForm);
+
+  const sourcesQuery = useQuery<Source[]>({
+    queryKey: ["sources"],
+    queryFn: fetchSources,
+  });
+  const statusQuery = useQuery<Source[]>({
+    queryKey: ["status"],
+    queryFn: fetchStatus,
+  });
 
   useEffect(() => {
     if (initialData) {
@@ -36,15 +44,27 @@ export default function LeadModal({
     }
   }, [initialData]);
   const mutation = useMutation({
-    mutationFn: (newUser: User) => {
-      return fetch("/api/users", {
+    mutationFn: async (newUser: User) => {
+      const res = await fetch("/api/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newUser),
-      }).then((res) => res.json());
+      });
+      return await res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] });
+      const fields = [
+        "users",
+        formData.status,
+        formData.source,
+        formData.vehicleOfInterest,
+      ];
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey.some((key) => fields.includes(String(key))),
+      });
+      console.log(formData);
+      setFormData(blankForm);
     },
   });
 
@@ -113,6 +133,7 @@ export default function LeadModal({
                 value={formData.phone}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
+                required
               />
             </div>
 
@@ -126,6 +147,7 @@ export default function LeadModal({
                 value={formData.vehicleOfInterest}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
+                required
               />
             </div>
 
@@ -136,25 +158,33 @@ export default function LeadModal({
                 value={formData.status}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
+                required
               >
                 <option value="">Select status</option>
-                <option value="Follow-Up">Follow-Up</option>
-                <option value="New">New</option>
-                <option value="Contacted">Contacted</option>
-                <option value="Qualified">Qualified</option>
-                <option value="Lost">Lost</option>
+                {statusQuery.data?.map((s) => (
+                  <option key={s.id} value={s.name}>
+                    {s.name}
+                  </option>
+                ))}
               </select>
             </div>
 
             <div>
               <label className="block text-sm font-medium">Source</label>
-              <input
-                type="text"
+              <select
                 name="source"
                 value={formData.source}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
-              />
+                required
+              >
+                <option value="">Select source</option>
+                {sourcesQuery.data?.map((s) => (
+                  <option key={s.id} value={s.name}>
+                    {s.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div>

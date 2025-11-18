@@ -1,22 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import UserList from "./UserList";
-import type { Source } from "./utils";
+import { fetchSources, type Source } from "./utils";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 
-export default function Source() {
+export default function SourceList() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["sources"],
-    queryFn: async () => {
-      const res = await fetch("/api/sources");
-      if (!res.ok) throw new Error("Failed to fetch data");
-      console.log(res);
-      return res.json();
-    },
+    queryFn: fetchSources,
   });
-  const [userListId, setUserListId] = useState<string | null>(null);
+  const [selectedSource, setSelectedSource] = useState<Source | null>(null);
   function closeUserList() {
-    setUserListId(null);
+    setSelectedSource(null);
   }
 
   return (
@@ -24,7 +19,7 @@ export default function Source() {
       {isLoading && <p className="text-gray-500">Loading users...</p>}
       {isError && <p className="text-red-500">Error fetching users data.</p>}
 
-      {userListId == null ? (
+      {selectedSource == null ? (
         data && (
           <div>
             <h1 className="text-3xl font-bold mb-6">Sources Dashboard</h1>
@@ -33,7 +28,9 @@ export default function Source() {
                 <li
                   key={item.id}
                   className="p-4 bg-white rounded shadow-sm"
-                  onClick={() => setUserListId(item.id)}
+                  onClick={() => {
+                    setSelectedSource(item);
+                  }}
                 >
                   <h2 className="font-bold">{item.name}</h2>
                 </li>
@@ -50,7 +47,7 @@ export default function Source() {
             <ArrowLeftIcon className="w-5 h-5" />
             Back
           </button>
-          <UserList id={userListId} tab="sources" name={data.name} />
+          <UserList item={selectedSource} tab="sources" name={data.name} />
         </div>
       )}
     </main>

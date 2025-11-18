@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { formatDate, User } from "./utils";
+import { fetchUsers, formatDate, User } from "./utils";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import LeadModal from "./_modals/LeadModal";
@@ -9,12 +9,7 @@ export default function Users() {
   const [currentItem, setCurrentItem] = useState<User | null>(null);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["users"],
-    queryFn: async () => {
-      const res = await fetch("/api/users");
-      if (!res.ok) throw new Error("Failed to fetch data");
-      console.log(res);
-      return res.json();
-    },
+    queryFn: fetchUsers,
   });
 
   return (

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { formatDate, User } from "./utils";
+import { fetchUserList, formatDate, Source, User, Vehicle } from "./utils";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import { Dispatch, SetStateAction } from "react";
 
@@ -10,18 +10,13 @@ type UserProp = {
 
 type UserListProp = {
   tab: string;
-  id: string | null;
+  item: Source | Vehicle | null;
   name: string;
 };
 export default function UserList(prop: UserListProp) {
   const { data, isLoading, isError } = useQuery({
-    queryKey: [prop.tab, prop.id],
-    queryFn: async () => {
-      const res = await fetch(`/api/${prop.tab}/${prop.id}`);
-      if (!res.ok) throw new Error("Failed to fetch data");
-      console.log(res);
-      return res.json();
-    },
+    queryKey: [prop.item?.name],
+    queryFn: () => fetchUserList(prop.tab, prop.item?.id),
   });
 
   return (
