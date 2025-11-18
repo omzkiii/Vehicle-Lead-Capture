@@ -32,3 +32,8 @@ user.get("/users", async (req: Request, res: Response) => {
     res.send(users);
   }
 });
+
+user.post("/users", async (req: Request, res: Response) => {
+  console.log(req.body);
+  res.send("OK");
+});
