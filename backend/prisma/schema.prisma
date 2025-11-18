@@ -23,6 +23,10 @@ model User {
   status            Status            @relation(fields: [statusId], references: [id])
   source            Source            @relation(fields: [sourceId], references: [id])
   vehicleOfInterest VehicleOfInterest @relation(fields: [vehicleOfInterestId], references: [id])
+
+  @@index([dateReceived(sort: Desc)])
+  @@index([vehicleOfInterestId, statusId, dateReceived])
+  @@index([sourceId, statusId, dateReceived])
 }
 
 model Status {

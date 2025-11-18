@@ -20,6 +20,7 @@ user.get("/users", async (req: Request, res: Response) => {
         status: { select: { name: true } },
         vehicleOfInterest: { select: { name: true } },
       },
+      orderBy: { dateReceived: "desc" },
     });
     const users = data.map((d) => ({
       ...d,
