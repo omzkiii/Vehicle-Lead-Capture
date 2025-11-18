@@ -12,12 +12,9 @@ import {
 import LeadModal from "./_list/_modals/LeadModal";
 import SourceModal from "./_list/_modals/SourceModal";
 import VehicleModal from "./_list/_modals/VehicleModal";
-import { User } from "./_list/utils";
+import { fetchSources, fetchStatus, fetchVehicles } from "./_list/utils";
 
-const Status = dynamic(() => import("./_list/Status"));
-const Users = dynamic(() => import("./_list/Users"));
-const Sources = dynamic(() => import("./_list/Sources"));
-const Vehicles = dynamic(() => import("./_list/Vehicles"));
+const Tab = dynamic(() => import("./_list/Tab"));
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("Status");
@@ -95,11 +92,11 @@ export default function Dashboard() {
 
       <main className="flex-1 p-6 overflow-y-auto">
         {activeTab === "Status" ? (
-          <Status />
+          <Tab tab="status" fetchItem={fetchStatus} />
         ) : activeTab === "Sources" ? (
-          <Sources />
+          <Tab tab="sources" fetchItem={fetchSources} />
         ) : activeTab === "Vehicles" ? (
-          <Vehicles />
+          <Tab tab="vehicles" fetchItem={fetchVehicles} />
         ) : null}
         <LeadModal
           isOpen={isLeadModalOpen}

@@ -24,7 +24,6 @@ type UserProp = {
 type UserListProp = {
   tab: string;
   item: Source | Vehicle | null;
-  name: string;
 };
 export default function UserList(prop: UserListProp) {
   const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);

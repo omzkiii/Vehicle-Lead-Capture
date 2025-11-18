@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { Vehicle } from "../utils";
+import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "@/app/ReactQueryProvider";
 
 type ModalFormProps = {
   isOpen: boolean;
   onClose: () => void;
   initialData?: Vehicle;
 };
-function onSubmit(data: Vehicle) {}
 
 export default function VehicleModal({
   isOpen,
@@ -17,10 +18,25 @@ export default function VehicleModal({
 }: ModalFormProps) {
   const [formData, setFormData] = useState<Vehicle>(
     initialData || {
-      id: null,
+      id: "",
       name: "",
     },
   );
+
+  const insertVehicle = useMutation({
+    mutationFn: async (newVehicle: Vehicle) => {
+      return await fetch("/api/vehicles", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newVehicle),
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["vehicles"],
+      });
+    },
+  });
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -30,7 +46,7 @@ export default function VehicleModal({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    insertVehicle.mutate(formData);
     onClose();
   };
 

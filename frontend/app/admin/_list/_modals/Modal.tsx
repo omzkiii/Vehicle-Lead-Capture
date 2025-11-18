@@ -5,34 +5,40 @@ import { Source } from "../utils";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/app/ReactQueryProvider";
 
+type Item = {
+  id: string;
+  name: string;
+};
 type ModalFormProps = {
   isOpen: boolean;
   onClose: () => void;
-  initialData?: Source;
+  initialData?: Item;
+  tab: string;
 };
 
-export default function SourceModal({
+export default function Modal({
   isOpen,
   onClose,
   initialData,
+  tab,
 }: ModalFormProps) {
-  const [formData, setFormData] = useState<Source>(
+  const [formData, setFormData] = useState<Item>(
     initialData || {
       id: "",
       name: "",
     },
   );
-  const insertSource = useMutation({
-    mutationFn: async (newSource: Source) => {
-      return await fetch("/api/sources", {
+  const insert = useMutation({
+    mutationFn: async (newItem: Item) => {
+      return await fetch(`/api/${tab}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newSource),
+        body: JSON.stringify(newItem),
       });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["sources"],
+        queryKey: [tab],
       });
     },
   });
@@ -45,7 +51,7 @@ export default function SourceModal({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    insertSource.mutate(formData);
+    insert.mutate(formData);
     onClose();
   };
 
@@ -54,10 +60,14 @@ export default function SourceModal({
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-        <h2 className="text-xl font-bold mb-4">Source Form</h2>
+        <h2 className="text-xl font-bold mb-4">
+          {tab.charAt(0).toUpperCase() + tab.slice(1)} Form
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-3">
           <div>
-            <label className="block text-sm font-medium">Source Name</label>
+            <label className="block text-sm font-medium">
+              {tab.charAt(0).toUpperCase() + tab.slice(1)} Name
+            </label>
             <input
               type="text"
               name="name"
