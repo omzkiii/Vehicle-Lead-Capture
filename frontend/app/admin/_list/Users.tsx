@@ -58,7 +58,6 @@ export default function Users() {
                   <h2 className="font-bold">
                     {item.firstName} {item.lastName}
                   </h2>
-                  <p>ID: {item.id}</p>
                   <p>Email: {item.email}</p>
                   <p>Phone: {item.phone}</p>
                   <p>Vehicle of Interest: {item.vehicleOfInterest}</p>
