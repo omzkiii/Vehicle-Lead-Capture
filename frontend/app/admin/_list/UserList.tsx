@@ -1,25 +1,9 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  fetchUserList,
-  fetchUsers,
-  formatDate,
-  Source,
-  User,
-  Vehicle,
-} from "./utils";
-import {
-  ArrowLeftIcon,
-  PencilSquareIcon,
-  TrashIcon,
-} from "@heroicons/react/24/solid";
-import { Dispatch, SetStateAction, useState } from "react";
+import { fetchUserList, formatDate, Source, User, Vehicle } from "./utils";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { useState } from "react";
 import { queryClient } from "@/app/ReactQueryProvider";
 import LeadModal from "./_modals/LeadModal";
-
-type UserProp = {
-  isModalOpen: string;
-  setIsModalOpen: Dispatch<SetStateAction<string>>;
-};
 
 type UserListProp = {
   tab: string;
@@ -28,6 +12,7 @@ type UserListProp = {
 export default function UserList(prop: UserListProp) {
   const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState<User | null>(null);
+  const [search, setSearch] = useState("");
   const { data, isLoading, isError } = useQuery({
     queryKey: [prop.item?.name],
     queryFn: () => fetchUserList(prop.tab, prop.item?.id),
@@ -55,19 +40,31 @@ export default function UserList(prop: UserListProp) {
       });
     },
   });
+  const filteredUsers = data?.users.filter((u: User) =>
+    `${u.firstName} ${u.lastName}`.toLowerCase().includes(search.toLowerCase()),
+  );
 
   return (
     <main>
       {isLoading && <p className="text-gray-500">Loading users...</p>}
       {isError && <p className="text-red-500">Error fetching users data.</p>}
       {data && (
-        <div>
-          <h1 className="text-3xl font-bold mb-6">{data.name}</h1>
-          <ul className="space-y-4">
-            {data.users.map((item: User) => (
+        <div className="pt-[7vh]">
+          <div className="absolute top-12 left-51 right-0 px-[2vw] pb-4 bg-white">
+            <h1 className="text-3xl font-bold w-full">{data.name}</h1>
+
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search user..."
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <ul className="space-y-4 pt-[5vh]">
+            {filteredUsers.map((item: User) => (
               <li
                 key={item.id}
-                className="p-4 bg-white rounded shadow-sm flex items-start justify-between"
+                className="p-5 mx-[1vw] bg-white rounded shadow-sm flex items-start justify-between"
               >
                 {/* LEFT SIDE CONTENT */}
                 <div className="pr-4">

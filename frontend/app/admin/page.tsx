@@ -57,7 +57,7 @@ export default function Dashboard() {
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-md flex flex-col p-4">
+      <aside className="w-50 bg-white shadow-md flex flex-col p-4">
         <h1 className="text-xl font-bold mb-6">Dashboard</h1>
         {/* Top navigation */}
         <ul className="space-y-2 flex-1">
@@ -94,7 +94,7 @@ export default function Dashboard() {
         </div>
       </aside>
 
-      <main className="flex-1 p-6 overflow-y-auto">
+      <main className="flex-1 p-6 pt-0 overflow-y-auto">
         {navItems
           .filter((item) => item.tab)
           .map((item) => (

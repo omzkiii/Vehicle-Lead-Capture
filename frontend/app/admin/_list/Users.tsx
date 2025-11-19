@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { fetchUserList, fetchUsers, formatDate, Status, User } from "./utils";
+import { fetchUserList, formatDate, Status, User } from "./utils";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import LeadModal from "./_modals/LeadModal";

@@ -46,20 +46,20 @@ export default function Tab({ tab, fetchItem }: TabProp) {
   });
 
   return (
-    <main className="flex-1 p-6 overflow-y-auto">
+    <main className="flex-1 p-6 pt-0 overflow-y-auto">
       {isLoading && <p className="text-gray-500">Loading {tab}...</p>}
       {isError && <p className="text-red-500">Error fetching {tab}.</p>}
       {selected == null ? (
         data && (
           <div>
-            <h1 className="text-3xl font-bold mb-6">
+            <h1 className="text-3xl font-bold pt-[2vh] pl-0 bg-white w-fill absolute">
               {tab.charAt(0).toUpperCase() + tab.slice(1)}
             </h1>
-            <ul className="space-y-4">
+            <ul className="space-y-4 pt-[7vh]">
               {data.map((item: Item) => (
                 <div
                   key={item.id}
-                  className="p-4 bg-white rounded shadow-sm flex items-start justify-between"
+                  className="p-4 bg-white rounded mx-[1vw] shadow-sm flex items-start justify-between"
                 >
                   <li
                     className="w-full h-full  rounded flex items-start justify-between"
@@ -106,13 +106,15 @@ export default function Tab({ tab, fetchItem }: TabProp) {
         )
       ) : (
         <div>
-          <button
-            onClick={closeUserList}
-            className="flex items-center gap-2 text-blue-500 hover:text-blue-700 mb-4"
-          >
-            <ArrowLeftIcon className="w-5 h-5" />
-            Back
-          </button>
+          <div className="-3xl font-bold  left-51 right-0 p-6 top-0 h-4 pl-2 bg-white absolute">
+            <button
+              onClick={closeUserList}
+              className="flex items-center gap-2 text-blue-500 hover:text-blue-700 mb-4"
+            >
+              <ArrowLeftIcon className="w-5 h-5" />
+              Back
+            </button>
+          </div>
           <UserList item={selected} tab={tab} />
         </div>
       )}
