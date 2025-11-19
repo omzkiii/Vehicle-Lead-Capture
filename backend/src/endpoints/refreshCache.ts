@@ -28,12 +28,15 @@ export async function refreshUserCache() {
 }
 
 export async function invalidateCache(user: User, old?: User | null) {
-  await Promise.all([
-    redis.del(`users:status:${old?.statusId}`),
-    redis.del(`users:source:${old?.sourceId}`),
-    redis.del(`users:voi:${old?.vehicleOfInterestId}`),
-    redis.del(`users:status:${user.statusId}`),
-    redis.del(`users:source:${user.sourceId}`),
-    redis.del(`users:voi:${user.vehicleOfInterestId}`),
-  ]);
+  const pageKeys = await redis.keys("users:page:*");
+  const keys = [
+    ...pageKeys,
+    `users:status:${old?.statusId}`,
+    `users:source:${old?.sourceId}`,
+    `users:voi:${old?.vehicleOfInterestId}`,
+    `users:status:${user.statusId}`,
+    `users:source:${user.sourceId}`,
+    `users:voi:${user.vehicleOfInterestId}`,
+  ];
+  await Promise.all(keys.map((k) => redis.del(k)));
 }

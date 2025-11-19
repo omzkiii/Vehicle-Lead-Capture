@@ -10,6 +10,8 @@ services:
       - /app/node_modules
     networks:
       - this-network
+    command: [ "npm", "run", "dev" ]
+    # command: [ "npm", "run", "start" ]
     depends_on:
       - backend
 
@@ -28,6 +30,7 @@ services:
     networks:
       - this-network
     command: [ "sh", "./start.sh" ]
+    # command: [ "sh", "./prod.sh" ]
     depends_on:
       valkey:
         condition: service_healthy

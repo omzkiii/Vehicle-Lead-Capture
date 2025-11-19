@@ -1,8 +1,8 @@
 import { Router } from "express";
 import type { Request, Response } from "express";
-import { prisma } from "../index.js";
+import { prisma, redis } from "../index.js";
 import { insertUser } from "../utils.js";
-import { invalidateCache } from "./refreshCache.js";
+import { CACHE_TTL, invalidateCache } from "./refreshCache.js";
 
 export const user = Router();
 
@@ -11,33 +11,35 @@ user.get("/users", async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const skip = (page - 1) * limit;
+    const cached = await redis.get(`users:page:${page}`);
+    if (cached) {
+      res.send(cached);
+    } else {
+      const data = await prisma.user.findMany({
+        omit: {
+          sourceId: true,
+          statusId: true,
+          vehicleOfInterestId: true,
+        },
+        include: {
+          source: { select: { name: true } },
+          status: { select: { name: true } },
+          vehicleOfInterest: { select: { name: true } },
+        },
+        skip: skip,
+        take: limit,
+        orderBy: { dateReceived: "desc" },
+      });
 
-    const data = await prisma.user.findMany({
-      omit: {
-        sourceId: true,
-        statusId: true,
-        vehicleOfInterestId: true,
-      },
-      include: {
-        source: { select: { name: true } },
-        status: { select: { name: true } },
-        vehicleOfInterest: { select: { name: true } },
-      },
-      skip: skip,
-      take: limit,
-      orderBy: { dateReceived: "desc" },
-    });
-
-    const users = data.map((d) => ({
-      ...d,
-      source: d.source.name,
-      status: d.status.name,
-      vehicleOfInterest: d.vehicleOfInterest.name,
-    }));
-
-    console.log(users.length);
-
-    res.json(users);
+      const users = data.map((d) => ({
+        ...d,
+        source: d.source.name,
+        status: d.status.name,
+        vehicleOfInterest: d.vehicleOfInterest.name,
+      }));
+      redis.set(`users:${page}`, JSON.stringify(users), { EX: CACHE_TTL });
+      res.json(users);
+    }
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });

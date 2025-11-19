@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import type { Response, Request } from "express";
 import { PrismaClient } from "./generated/prisma/client.js";

@@ -30,11 +30,11 @@ async function getGistFile(
 }
 
 export async function seed() {
-  const data = await getGistFile(
-    "3691a622ba446e4e39d0e80ece702a44",
-    "leads.json",
-  ).catch(console.error);
-  data?.map(async (d) => {
+  const data =
+    (await getGistFile("3691a622ba446e4e39d0e80ece702a44", "leads.json").catch(
+      console.error,
+    )) ?? [];
+  data.map(async (d) => {
     try {
       await insertUser(d);
     } catch (error) {
