@@ -27,7 +27,7 @@ export async function refreshUserCache() {
   return users;
 }
 
-export async function invalidateCache(user: User, old: User | null) {
+export async function invalidateCache(user: User, old?: User | null) {
   await Promise.all([
     redis.del(`users:status:${old?.statusId}`),
     redis.del(`users:source:${old?.sourceId}`),
