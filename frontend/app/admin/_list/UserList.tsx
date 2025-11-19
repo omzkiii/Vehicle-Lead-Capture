@@ -51,7 +51,7 @@ export default function UserList(prop: UserListProp) {
       {data && (
         <div className="pt-[7vh]">
           <div className="absolute top-12 left-51 right-0 px-[2vw] pb-4 bg-white">
-            <h1 className="text-3xl font-bold w-full">{data.name}</h1>
+            <h1 className="text-3xl font-bold w-full p-3">{data.name}</h1>
 
             <input
               value={search}

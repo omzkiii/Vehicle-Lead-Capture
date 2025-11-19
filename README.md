@@ -24,11 +24,12 @@ The project implements a complete workflow for capturing, organizing, and managi
 ### **Tooling**
 - Docker
 - Docker-Compose
+- Shell Scripting
 - RESTful API conventions
 
 ---
 
-##  Features
+## Features
 
 ### 1. Dataset & Seeding
 - Seeds the database automatically if empty.
