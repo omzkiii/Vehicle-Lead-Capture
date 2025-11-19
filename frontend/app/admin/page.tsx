@@ -13,13 +13,12 @@ import {
 
 import LeadModal from "./_list/_modals/LeadModal";
 import { fetchSources, fetchStatus, fetchVehicles } from "./_list/utils";
-import Modal from "./_list/_modals/Modal";
 import Users from "./_list/Users";
-
+const Modal = dynamic(() => import("./_list/_modals/Modal"));
 const Tab = dynamic(() => import("./_list/Tab"));
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState("Status");
+  const [activeTab, setActiveTab] = useState("Users");
   const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
   const [isSourceModalOpen, setIsSourceModalOpen] = useState(false);
   const [isVehicleModalOpen, setIsVehicleModalOpen] = useState(false);
