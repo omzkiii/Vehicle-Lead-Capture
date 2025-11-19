@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Source } from "../utils";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/app/ReactQueryProvider";
+import { AnimatePresence, motion } from "framer-motion";
 
 type Item = {
   id: string;
@@ -26,6 +27,7 @@ export default function Modal({
   initialData,
   tab,
 }: ModalFormProps) {
+  // if (!isOpen) return null;
   const [formData, setFormData] = useState<Item>(initialData || blankForm);
 
   useEffect(() => {
@@ -62,45 +64,54 @@ export default function Modal({
     onClose();
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-        <h2 className="text-xl font-bold mb-4">
-          {tab.charAt(0).toUpperCase() + tab.slice(1)} Form
-        </h2>
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <div>
-            <label className="block text-sm font-medium">
-              {tab.charAt(0).toUpperCase() + tab.slice(1)} Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full border rounded p-2 mt-1"
-              required
-            />
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          key="modal"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+        >
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+            <h2 className="text-xl font-bold mb-4">
+              {tab.charAt(0).toUpperCase() + tab.slice(1)} Form
+            </h2>
+            <form onSubmit={handleSubmit} className="space-y-3">
+              <div>
+                <label className="block text-sm font-medium">
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)} Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="w-full border rounded p-2 mt-1"
+                  required
+                />
+              </div>
+              <div className="flex justify-end space-x-2 mt-4">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
           </div>
-          <div className="flex justify-end space-x-2 mt-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
-            >
-              Save
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
