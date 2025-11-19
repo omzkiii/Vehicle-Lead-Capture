@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
+import { motion } from "framer-motion";
 import {
   UserGroupIcon,
   SignalIcon,
@@ -27,6 +28,7 @@ export default function Dashboard() {
     { name: "Sources", icon: SignalIcon, tab: true, fetchItem: fetchSources },
     { name: "Vehicles", icon: TruckIcon, tab: true, fetchItem: fetchVehicles },
   ];
+
   const buttonItems = [
     {
       name: "Add Lead",
@@ -59,52 +61,61 @@ export default function Dashboard() {
       {/* Sidebar */}
       <aside className="w-50 bg-white shadow-md flex flex-col p-4">
         <h1 className="text-xl font-bold mb-6">Dashboard</h1>
+
         {/* Top navigation */}
         <ul className="space-y-2 flex-1">
           {navItems
             .filter((item) => item.tab)
             .map((item) => (
-              <li
+              <motion.li
                 key={item.name}
                 onClick={() => setActiveTab(item.name)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 className={`flex items-center space-x-2 cursor-pointer p-2 rounded ${
                   activeTab === item.name ? "bg-gray-200" : "hover:bg-gray-100"
                 }`}
               >
                 <item.icon className="w-6 h-6 text-gray-600" />
                 <span className="text-gray-800">{item.name}</span>
-              </li>
+              </motion.li>
             ))}
         </ul>
+
         {/* Bottom buttons */}
         <div className="flex flex-col space-y-2 pb-8 mt-auto">
           {buttonItems
             .filter((item) => !item.tab)
             .map((item) => (
-              <button
+              <motion.button
                 key={item.name}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
                 className="p-2 rounded bg-gray-100 hover:bg-gray-200"
-                onClick={() => {
-                  item.toggle!(true);
-                }}
+                onClick={() => item.toggle!(true)}
               >
                 {item.name}
-              </button>
+              </motion.button>
             ))}
         </div>
       </aside>
 
+      {/* Main Content */}
       <main className="flex-1 p-6 pt-0 overflow-y-auto">
         {navItems
           .filter((item) => item.tab)
           .map((item) => (
-            <div
+            <motion.div
               key={item.name}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: activeTab === item.name ? 1 : 0 }}
+              transition={{ duration: 0.3 }}
               className={activeTab === item.name ? "block" : "hidden"}
             >
               <Tab tab={item.name.toLowerCase()} fetchItem={item.fetchItem!} />
-            </div>
+            </motion.div>
           ))}
+
         <LeadModal
           isOpen={isLeadModalOpen}
           onClose={() => setIsLeadModalOpen(false)}
