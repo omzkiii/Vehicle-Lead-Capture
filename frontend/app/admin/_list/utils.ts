@@ -32,10 +32,9 @@ export function formatDate(date: string) {
   return `${d.getFullYear()} ${d.toLocaleString("en-US", { month: "short" })} ${d.getDate()}`;
 }
 
-export async function fetchUsers() {
-  const res = await fetch("/api/users");
+export async function fetchUsers(page: number = 1, limit: number = 10) {
+  const res = await fetch(`/api/users?page=${page}&limit=${limit}`);
   if (!res.ok) throw new Error("Failed to fetch users");
-  console.log(res);
   return res.json();
 }
 export async function fetchVehicles() {

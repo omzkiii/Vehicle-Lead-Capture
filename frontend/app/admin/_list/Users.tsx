@@ -1,16 +1,20 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { fetchUserList, formatDate, Status, User } from "./utils";
+import { fetchUsers, formatDate, User } from "./utils";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import LeadModal from "./_modals/LeadModal";
 import { queryClient } from "@/app/ReactQueryProvider";
 
-export default function Users(item: Status) {
+const PAGE_SIZE = 4;
+
+export default function Users() {
   const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState<User | null>(null);
+  const [page, setPage] = useState(1);
+
   const { data, isLoading, isError } = useQuery({
-    queryKey: [item?.name],
-    queryFn: () => fetchUserList("status", item?.id),
+    queryKey: ["users", page],
+    queryFn: () => fetchUsers(page, PAGE_SIZE),
   });
 
   const deleteUser = useMutation({
@@ -29,7 +33,6 @@ export default function Users(item: Status) {
         user.vehicleOfInterest,
       ];
       queryClient.invalidateQueries({
-        // queryKey: ["users"],
         predicate: (query) =>
           query.queryKey.some((key) => fields.includes(String(key))),
       });
@@ -51,7 +54,6 @@ export default function Users(item: Status) {
                 key={item.id}
                 className="p-4 bg-white rounded shadow-sm flex items-start justify-between"
               >
-                {/* LEFT SIDE CONTENT */}
                 <div className="pr-4">
                   <h2 className="font-bold">
                     {item.firstName} {item.lastName}
@@ -65,7 +67,6 @@ export default function Users(item: Status) {
                   <p>Date Received: {formatDate(item.dateReceived)}</p>
                 </div>
 
-                {/* RIGHT SIDE BUTTONS */}
                 <div className="flex flex-col space-y-2">
                   <button
                     className="p-2 rounded bg-blue-100 hover:bg-blue-200 flex items-center"
@@ -89,6 +90,25 @@ export default function Users(item: Status) {
               </li>
             ))}
           </ul>
+
+          <div className="flex justify-center space-x-4 mt-6">
+            <button
+              className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+              disabled={page === 1}
+              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+            >
+              Previous
+            </button>
+            <span className="px-4 py-2">Page {page}</span>
+            <button
+              className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+              disabled={data.length < PAGE_SIZE}
+              onClick={() => setPage((prev) => prev + 1)}
+            >
+              Next
+            </button>
+          </div>
+
           <LeadModal
             key={currentItem?.id ?? "new"}
             isOpen={isLeadModalOpen}

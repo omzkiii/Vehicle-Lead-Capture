@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import {
   UserGroupIcon,
+  QueueListIcon,
   SignalIcon,
   TruckIcon,
 } from "@heroicons/react/24/outline";
@@ -13,6 +14,7 @@ import {
 import LeadModal from "./_list/_modals/LeadModal";
 import { fetchSources, fetchStatus, fetchVehicles } from "./_list/utils";
 import Modal from "./_list/_modals/Modal";
+import Users from "./_list/Users";
 
 const Tab = dynamic(() => import("./_list/Tab"));
 
@@ -24,7 +26,8 @@ export default function Dashboard() {
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
 
   const navItems = [
-    { name: "Status", icon: UserGroupIcon, tab: true, fetchItem: fetchStatus },
+    { name: "Users", icon: UserGroupIcon, tab: true, fetchItem: null },
+    { name: "Status", icon: QueueListIcon, tab: true, fetchItem: fetchStatus },
     { name: "Sources", icon: SignalIcon, tab: true, fetchItem: fetchSources },
     { name: "Vehicles", icon: TruckIcon, tab: true, fetchItem: fetchVehicles },
   ];
@@ -102,8 +105,17 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <main className="flex-1 p-6 pt-0 overflow-y-auto">
+        <motion.div
+          key={"users"}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: activeTab === "Users" ? 1 : 0 }}
+          transition={{ duration: 0.3 }}
+          className={activeTab === "Users" ? "block" : "hidden"}
+        >
+          <Users />
+        </motion.div>
         {navItems
-          .filter((item) => item.tab)
+          .filter((item) => item.tab && item.fetchItem)
           .map((item) => (
             <motion.div
               key={item.name}
