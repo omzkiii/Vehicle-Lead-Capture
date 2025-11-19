@@ -73,12 +73,12 @@ export default function Tab({ tab, fetchItem }: TabProp) {
               {data.map((item: Item) => (
                 <motion.div
                   key={item.id}
-                  className="p-4 bg-white rounded mx-[1vw] shadow-sm flex items-start justify-between"
+                  className="p-1 bg-white rounded mx-[1vw] shadow-sm flex items-start justify-between"
                   variants={itemVariants}
                   whileHover={{ scale: 1.01 }}
                 >
                   <li
-                    className="w-full h-full rounded flex items-start justify-between"
+                    className="w-full h-10 p-2  rounded flex items-start justify-between"
                     onClick={() => setSelected(item)}
                   >
                     <h2 className="font-bold">{item.name}</h2>
