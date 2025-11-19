@@ -104,3 +104,6 @@ You can start using the app by going to:
 ```
 http://localhost:3000/admin
 ```
+
+## DID I JUST UPLOAD THE ENV FILE???
+I upload the env incase the docker is now available
