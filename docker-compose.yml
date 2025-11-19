@@ -27,6 +27,7 @@ services:
       - /app/node_modules
     networks:
       - this-network
+    command: [ "sh", "./start.sh" ]
     depends_on:
       valkey:
         condition: service_healthy
