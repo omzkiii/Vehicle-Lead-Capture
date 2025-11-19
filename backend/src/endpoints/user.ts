@@ -1,8 +1,8 @@
 import { Router } from "express";
 import type { Request, Response } from "express";
-import { prisma, redis } from "../index.js";
+import { prisma } from "../index.js";
 import { insertUser } from "../utils.js";
-import { invalidateCache, refreshUserCache } from "./refreshCache.js";
+import { invalidateCache } from "./refreshCache.js";
 
 export const user = Router();
 
@@ -23,7 +23,7 @@ user.get("/users", async (req: Request, res: Response) => {
         status: { select: { name: true } },
         vehicleOfInterest: { select: { name: true } },
       },
-      skip,
+      skip: skip,
       take: limit,
       orderBy: { dateReceived: "desc" },
     });

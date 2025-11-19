@@ -1,16 +1,21 @@
 "use client";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { fetchUserList, formatDate, Source, User, Vehicle } from "./utils";
+import { fetchUserList, formatDate, User } from "./utils";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { queryClient } from "@/app/ReactQueryProvider";
 import LeadModal from "./_modals/LeadModal";
 import { motion } from "framer-motion";
 
+type Item = {
+  id: string;
+  name: string;
+};
+
 type UserListProp = {
   tab: string;
-  item: Source | Vehicle | null;
+  item: Item | null;
 };
 
 export default function UserList(prop: UserListProp) {
@@ -46,17 +51,10 @@ export default function UserList(prop: UserListProp) {
   });
 
   const filteredUsers = data?.users.filter((u: User) =>
-    `${u.firstName} ${u.lastName}`.toLowerCase().includes(search.toLowerCase()),
+    `${u.firstName} ${u.lastName} ${u.email} ${u.phone} ${u.vehicleOfInterest} ${u.status} ${u.source} ${formatDate(u.dateReceived)}`
+      .toLowerCase()
+      .includes(search.toLowerCase()),
   );
-
-  const containerVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { staggerChildren: 0.05 },
-    },
-  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },

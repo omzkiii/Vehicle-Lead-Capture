@@ -19,7 +19,6 @@ vehicle.get("/vehicles", async (req: Request, res: Response) => {
 
 vehicle.post("/vehicles", async (req: Request, res: Response) => {
   const vehicle = req.body;
-
   try {
     const createdVehicle = await prisma.vehicleOfInterest.upsert({
       where: { id: vehicle.id ?? "" },

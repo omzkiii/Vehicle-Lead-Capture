@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchSources, fetchStatus, Source, User } from "../utils";
+import { fetchSources, fetchStatus, Source, Status, User } from "../utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "@/app/ReactQueryProvider";
 
@@ -42,7 +42,8 @@ export default function LeadModal({
     queryKey: ["sources"],
     queryFn: fetchSources,
   });
-  const statusQuery = useQuery<Source[]>({
+
+  const statusQuery = useQuery<Status[]>({
     queryKey: ["status"],
     queryFn: fetchStatus,
   });

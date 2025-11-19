@@ -16,6 +16,7 @@ status.get("/status", async (req: Request, res: Response) => {
     res.send(status);
   }
 });
+
 status.post("/status", async (req: Request, res: Response) => {
   const status = req.body;
   try {
@@ -24,7 +25,6 @@ status.post("/status", async (req: Request, res: Response) => {
       create: { id: uuid(), name: status.name },
       update: { name: status.name },
     });
-
     redis.del(`users:status:${createdStatus.id}`);
     redis.del(`status`);
     res.status(201).json(createdStatus);
@@ -76,6 +76,7 @@ status.get("/status/:id", async (req: Request, res: Response) => {
     res.send(formattedStatus);
   }
 });
+
 status.delete("/status/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
 
