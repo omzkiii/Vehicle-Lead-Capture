@@ -25,6 +25,10 @@ status.post("/status", async (req: Request, res: Response) => {
       create: { id: uuid(), name: status.name },
       update: { name: status.name },
     });
+    if (status.id) {
+      const keys = await redis.keys("users:*");
+      keys.map((k) => redis.del(k));
+    }
     redis.del(`users:status:${createdStatus.id}`);
     redis.del(`status`);
     res.status(201).json(createdStatus);
@@ -89,6 +93,8 @@ status.delete("/status/:id", async (req: Request, res: Response) => {
       where: { id: id },
     });
 
+    const keys = await redis.keys("users:*");
+    keys.map((k) => redis.del(k));
     redis.del(`users:status:${deletedStatus.id}`);
     redis.del(`status`);
     res.status(200).json({ message: "Status deleted", user: deletedStatus });

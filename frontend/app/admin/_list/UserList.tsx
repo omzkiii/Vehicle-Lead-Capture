@@ -24,7 +24,7 @@ export default function UserList(prop: UserListProp) {
   const [search, setSearch] = useState("");
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: [prop.item?.name],
+    queryKey: ["users", prop.item?.name],
     queryFn: () => fetchUserList(prop.tab, prop.item?.id),
   });
 

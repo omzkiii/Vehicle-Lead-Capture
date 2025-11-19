@@ -25,6 +25,10 @@ source.post("/sources", async (req: Request, res: Response) => {
       create: { id: uuid(), name: source.name },
       update: { name: source.name },
     });
+    if (source.id) {
+      const keys = await redis.keys("users:*");
+      keys.map((k) => redis.del(k));
+    }
     redis.del(`users:source:${createdSource.id}`);
     redis.del(`sources`);
     res.status(201).json(createdSource);
@@ -89,6 +93,8 @@ source.delete("/sources/:id", async (req: Request, res: Response) => {
       where: { id: id },
     });
 
+    const keys = await redis.keys("users:*");
+    keys.map((k) => redis.del(k));
     redis.del(`users:source:${deletedSource.id}`);
     redis.del(`sources`);
     res.status(200).json({ message: "Source deleted", user: deletedSource });

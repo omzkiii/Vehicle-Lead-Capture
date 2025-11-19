@@ -41,8 +41,10 @@ export default function Modal({
       });
     },
     onSuccess: () => {
+      const fields = ["users", tab];
       queryClient.invalidateQueries({
-        queryKey: [tab],
+        predicate: (query) =>
+          query.queryKey.some((key) => fields.includes(String(key))),
       });
       setFormData(blankForm);
     },

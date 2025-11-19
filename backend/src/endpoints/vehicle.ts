@@ -25,6 +25,10 @@ vehicle.post("/vehicles", async (req: Request, res: Response) => {
       create: { id: uuid(), name: vehicle.name },
       update: { name: vehicle.name },
     });
+    if (vehicle.id) {
+      const keys = await redis.keys("users:*");
+      keys.map((k) => redis.del(k));
+    }
     redis.del(`users:voi:${createdVehicle.id}`);
     redis.del(`vehicles`);
     res.status(201).json(createdVehicle);
@@ -89,6 +93,8 @@ vehicle.delete("/vehicles/:id", async (req: Request, res: Response) => {
       where: { id },
     });
 
+    const keys = await redis.keys("users:*");
+    keys.map((k) => redis.del(k));
     redis.del(`users:voi:${deletedVehicle.id}`);
     redis.del(`vehicles`);
     res.status(200).json({ message: "Vehicle deleted", user: deletedVehicle });

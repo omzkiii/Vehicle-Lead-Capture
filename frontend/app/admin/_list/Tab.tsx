@@ -44,7 +44,11 @@ export default function Tab({ tab, fetchItem }: TabProp) {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [tab] });
+      const fields = ["users", tab];
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey.some((key) => fields.includes(String(key))),
+      });
     },
   });
 
