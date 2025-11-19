@@ -5,7 +5,7 @@ The project implements a complete workflow for capturing, organizing, and managi
 
 ---
 
-## 📌 Tech Stack
+## Tech Stack
 
 ### **Backend**
 - Node.js + TypeScript
