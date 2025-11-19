@@ -68,12 +68,7 @@ export default function UserList(prop: UserListProp) {
       {isLoading && <p className="text-gray-500">Loading users...</p>}
       {isError && <p className="text-red-500">Error fetching users data.</p>}
       {data && (
-        <motion.div
-          className="pt-[7vh]"
-          initial="hidden"
-          animate="visible"
-          variants={containerVariants}
-        >
+        <div className="pt-[7vh]">
           <div className="absolute top-12 left-51 right-0 px-[2vw] pb-4 bg-white">
             <h1 className="text-3xl font-bold w-full p-3">{data.name}</h1>
             <input
@@ -134,7 +129,7 @@ export default function UserList(prop: UserListProp) {
             onClose={() => setIsLeadModalOpen(false)}
             initialData={currentItem ?? undefined}
           />
-        </motion.div>
+        </div>
       )}
     </main>
   );
