@@ -21,7 +21,7 @@ source.post("/sources", async (req: Request, res: Response) => {
   const source = req.body;
   try {
     const createdSource = await prisma.source.upsert({
-      where: { id: source.id ?? uuid() },
+      where: { id: source.id ?? "" },
       create: { id: uuid(), name: source.name },
       update: { name: source.name },
     });

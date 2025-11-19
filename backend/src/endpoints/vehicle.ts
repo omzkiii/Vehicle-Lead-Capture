@@ -22,7 +22,7 @@ vehicle.post("/vehicles", async (req: Request, res: Response) => {
 
   try {
     const createdVehicle = await prisma.vehicleOfInterest.upsert({
-      where: { name: vehicle.name },
+      where: { id: vehicle.id ?? "" },
       create: { id: uuid(), name: vehicle.name },
       update: { name: vehicle.name },
     });

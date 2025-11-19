@@ -20,7 +20,7 @@ status.post("/status", async (req: Request, res: Response) => {
   const status = req.body;
   try {
     const createdStatus = await prisma.status.upsert({
-      where: { name: status.name },
+      where: { id: status.id ?? "" },
       create: { id: uuid(), name: status.name },
       update: { name: status.name },
     });
