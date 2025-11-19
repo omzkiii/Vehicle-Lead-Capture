@@ -18,6 +18,7 @@ The project implements a complete workflow for capturing, organizing, and managi
 - Next.js 
 - React 
 - Tailwind CSS
+- Framer Motion
 - HeroUI
 - TanStack Query
 
@@ -61,8 +62,10 @@ Built with Next.js + HeroUI:
 
 ### 5. Productivity Features
 - Search
+- Pagination
 - Caching
 - Grouping
+- Simple Animations
 - Real-time UI updates with TanStack Query
 
 
@@ -106,4 +109,4 @@ http://localhost:3000/admin
 ```
 
 ## DID I JUST UPLOAD THE ENV FILE???
-I upload the env incase the docker is now available
+I upload the env incase the docker is not available
